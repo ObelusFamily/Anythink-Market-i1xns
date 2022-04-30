@@ -10,36 +10,18 @@ const { faker } = require("@faker-js/faker");
 var Item = mongoose.model("Item");
 var Comment = mongoose.model("Comment");
 var User = mongoose.model("User");
-const { sendEvent } = require("../lib/event");
 
 mongoose.connect(process.env.MONGODB_URI);
 
-const user = User.findOne()
-  .then((user) => {
-    var data = {
-      title: "seed item",
-    };
-    var item = new Item(data);
-
-    item.seller = user;
-
-    return item.save().then(function () {
-      sendEvent("item_created", { item: data });
-    });
-  })
-  .then(function () {
-    process.exit(0);
-  });
-
 async function generateUsers() {
   const users = [];
-  for (let i = 0; i < 150; i++) {
-    
+  for (let i = 0; i < 100; i++) {
+    const username = faker.internet.userName().replace("_", "").replace(".", "")
     const user = new User({
-      username: faker.name.firstName() + faker.name.lastName(),
+      username,
       email: faker.internet.email(),
     });
-    user.setPassword("1234");
+    user.setPassword(username);
     await user.save();
     users.push(user);
   }
@@ -52,16 +34,15 @@ async function generateItems(users) {
       title: faker.commerce.productName(),
       description: faker.lorem.paragraph(),
       image: faker.image.image(),
-      seller: user
+      seller: user,
     });
     await item.save();
-
 
     const comment = new Comment({
       body: faker.lorem.sentence(),
       seller: user,
       item,
-    })
+    });
     await comment.save();
   }
 }
