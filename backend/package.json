@@ -8,11 +8,12 @@
   "scripts": {
     "start": "node ./app.js",
     "dev": "nodemon ./app.js",
-    "seeds": "echo 'Please create seeds file'",
+    "seeds": "node ./scripts/seeds.js",
     "test": "newman run ./tests/api-tests.postman.json -e ./tests/env-api-tests.postman.json",
     "stop": "lsof -ti :3000 | xargs kill"
   },
   "dependencies": {
+    "@faker-js/faker": "^6.2.0",
     "axios": "^0.25.0",
     "body-parser": "1.15.0",
     "cors": "2.7.1",
