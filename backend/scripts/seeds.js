@@ -33,7 +33,7 @@ const user = User.findOne()
 
 async function generateUsers() {
   const users = [];
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 150; i++) {
     
     const user = new User({
       username: faker.name.firstName() + faker.name.lastName(),
