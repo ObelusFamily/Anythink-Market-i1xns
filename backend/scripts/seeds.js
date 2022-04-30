@@ -5,6 +5,7 @@ require("../models/Comment");
 require("../config/passport");
 
 const mongoose = require("mongoose");
+const { faker } = require("@faker-js/faker");
 
 var Item = mongoose.model("Item");
 var Comment = mongoose.model("Comment");
@@ -27,5 +28,47 @@ const user = User.findOne()
     });
   })
   .then(function () {
-    process.exit(0)
+    process.exit(0);
   });
+
+async function generateUsers() {
+  const users = [];
+  for (let i = 0; i < 100; i++) {
+    
+    const user = new User({
+      username: faker.name.firstName() + faker.name.lastName(),
+      email: faker.internet.email(),
+    });
+    user.setPassword("1234");
+    await user.save();
+    users.push(user);
+  }
+  return users;
+}
+
+async function generateItems(users) {
+  for (const user of users) {
+    const item = new Item({
+      title: faker.commerce.productName(),
+      description: faker.lorem.paragraph(),
+      image: faker.image.image(),
+      seller: user
+    });
+    await item.save();
+  }
+}
+
+// main async function
+async function main() {
+  try {
+    const users = await generateUsers();
+    await generateItems(users);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+main().then(() => {
+  console.log("done");
+  process.exit(0);
+});
