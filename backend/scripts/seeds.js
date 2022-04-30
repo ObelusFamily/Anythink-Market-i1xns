@@ -62,7 +62,7 @@ async function generateItems(users) {
       seller: user,
       item,
     })
-    comment.save();
+    await comment.save();
   }
 }
 
