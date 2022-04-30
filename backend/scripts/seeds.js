@@ -55,6 +55,14 @@ async function generateItems(users) {
       seller: user
     });
     await item.save();
+
+
+    const comment = new Comment({
+      body: faker.lorem.sentence(),
+      seller: user,
+      item,
+    })
+    comment.save();
   }
 }
 
